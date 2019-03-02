@@ -98,7 +98,7 @@ namespace Discriptive_statistics
         public override string ToString()
         {
             string s = "Описательная статистика: ";
-            s += "\nСреднее: " + Average();
+            s += "\nСреднее: ";// + Average();
             return base.ToString();
         }
     }
