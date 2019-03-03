@@ -8,9 +8,7 @@ namespace Discriptive_statistics
 {
     class testLINQ
     {
-        public static double[] array { get; set; }
-
-        #region Функции
+        
         /// <summary>
         /// Нахождение среднего для какой-то совокупности
         /// </summary>
@@ -18,7 +16,7 @@ namespace Discriptive_statistics
         /// <returns></returns>
         public static double Average(double[] arr)
         {
-            return array.Sum() / array.Length;
+            return arr.Sum() / arr.Length;
         }
         /// <summary>
         /// Нахождение стандартной ошибки для какой-то совокупности
@@ -27,7 +25,7 @@ namespace Discriptive_statistics
         /// <returns></returns>
         public static double StandartError(double[] arr)
         {
-            return 0;
+            return StandartDeviation(arr) / Math.Sqrt(arr.Length);
         }
         /// <summary>
         /// Нахождение моды для какой-то совокупности
@@ -36,7 +34,7 @@ namespace Discriptive_statistics
         /// <returns></returns>
         public static double Fashion(double[] arr)
         {
-            var dic = array.GroupBy(x => x).Where(g => g.Count() > 1).Select(y => new { Element = y.Key, Count = y.Count() }).ToList();
+            var dic = arr.GroupBy(x => x).Where(g => g.Count() > 1).Select(y => new { Element = y.Key, Count = y.Count() }).ToList();
             var w = from v in dic orderby v.Count select v;
             return w.Last().Element;
         }
@@ -47,7 +45,7 @@ namespace Discriptive_statistics
         /// <returns></returns>
         public static double Max(double[] arr)
         {
-            return array.Max();
+            return arr.Max();
         }
         /// <summary>
         /// Нахождение минимального элемента для какой-то совокупности
@@ -56,7 +54,7 @@ namespace Discriptive_statistics
         /// <returns></returns>
         public static double Min(double[] arr)
         {
-            return array.Min();
+            return arr.Min();
         }
         /// <summary>
         /// Нахождение эксцеса для какой-то совокупности
@@ -65,7 +63,15 @@ namespace Discriptive_statistics
         /// <returns></returns>
         public static double Excess(double[] arr)
         {
-            return 0;
+            double aver = Average(arr);
+            double res = 0;
+            foreach (double x in arr)
+                res += (x - aver) * (x - aver) * (x - aver) * (x - aver);
+            double n = arr.Length;
+            res /= Math.Pow(StandartDeviation(arr), 4);
+            res *= (n * (n + 1)) / ((n - 1) * (n - 2) * (n - 3));
+            res -= 3 * (n - 1) * (n - 1) / ((n - 2) * (n - 3));
+            return res;
         }
         /// <summary>
         /// Нахождение суммы всех элементов для какой-то совокупности
@@ -74,7 +80,7 @@ namespace Discriptive_statistics
         /// <returns></returns>
         public static double Amount(double[] arr)
         {
-            return array.Sum();
+            return arr.Sum();
         }
         /// <summary>
         /// Нахождение интервала для какой-то совокупности
@@ -83,7 +89,7 @@ namespace Discriptive_statistics
         /// <returns></returns>
         public static double Interval(double[] arr)
         {
-            return 0;
+            return Max(arr) - Min(arr);
         }
         /// <summary>
         /// Нахождение стандартного отклонения для какой-то совокупности
@@ -92,7 +98,7 @@ namespace Discriptive_statistics
         /// <returns></returns>
         public static double StandartDeviation(double[] arr)
         {
-            return 0;
+            return Math.Sqrt(Dispersion(arr));
         }
         /// <summary>
         /// Нахождение асимметрии для какой-то совокупности
@@ -101,27 +107,32 @@ namespace Discriptive_statistics
         /// <returns></returns>
         public static double Asymmetry(double[] arr)
         {
-            return 0;
+            double aver = Average(arr);
+            double res = 0;
+            foreach (double x in arr)
+                res += (x - aver) * (x - aver) * (x - aver);
+            res /= Math.Pow(StandartDeviation(arr),3);
+            res *= (double)arr.Length / (double)((arr.Length - 1) * (arr.Length - 2));
+            return res;
         }
         /// <summary>
         /// Нахождение медианы для какой-то совокупности
         /// </summary>
         /// <param name="arr">Какая-то совокупность</param>
         /// <returns></returns>
-        public static object Median(double[] arr)
+        public static double Median(double[] arr)
         {
-            var s = from t in array orderby t select t;
-             var d=s.Select ((elem, index) => new { index, elem = array[index] });
-            //if(s.ToArray().Count()%2!=0)
-                return s.ToArray().GetValue(s.ToArray().Count() / 2 + 1);
-            //return (s.ToArray().GetValue(s.ToArray().Count() / 2) + s.ToArray().GetValue(s.ToArray().Count() / 2 - 1)) / 2;
+            var s = from t in arr orderby t select t;
+            var d = s.Select((elem, index) => new { index, elem = arr[index] });
 
-           // return 0;
+            var e = s.ToArray().GetValue(s.ToArray().Count() / 2);
+
+            if (arr.Length % 2 != 0) return (double)e;
+
+            var f1 = s.ToArray().GetValue(s.ToArray().Count() / 2 - 1);
+             return ((double)f1+(double)e) / 2;
+            //return f1;
         }
-        //public static double Score(double[] array, int n)
-        //{
-        //    return n;
-        //}
         /// <summary>
         /// Нахождение дисперсии для какой-то совокупности
         /// </summary>
@@ -129,9 +140,34 @@ namespace Discriptive_statistics
         /// <returns></returns>
         public static double Dispersion(double[] arr)
         {
-
-            return 0;
+            double aver = Average(arr);
+            double res = 0;
+            foreach (double x in arr)
+                res += (x - aver) * (x - aver);
+            res /= arr.Length - 1;
+            return res;
         }
-        #endregion
+        /// <summary>
+        /// Вывод описательной статистики для какой-то совокупности
+        /// </summary>
+        /// <param name="arr">Какая-то совокупность</param>
+        public static void Output_descriptive_statistics(double[] arr)
+        {
+            string s = "Описательная статистика: ";
+            s += "\nСреднее: " + Average(arr);
+            s += "\nСумма: " + Amount(arr);
+            s += "\nСтандартная ошибка: " + StandartError(arr);
+            s += "\nМедиана: " + Median(arr);
+            s += "\nМода: " + Fashion(arr);
+            s += "\nСтандартное отклонение: " + StandartDeviation(arr);
+            s += "\nДисперсия выборки: " + Dispersion(arr);
+            s += "\nЭксцесс: " + Excess(arr);
+            s += "\nАсимметричность: " + Asymmetry(arr);
+            s += "\nИнтервал: " + Interval(arr);
+            s += "\nМинимум: " + Min(arr);
+            s += "\nМаксимум: " + Max(arr);
+            s += "\nСчет: " + arr.Length;
+            Console.WriteLine(s);
+        }
     }
 }
