@@ -1,8 +1,14 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Collections;
+using System.Collections.Generic;
+using System.Data.Linq;
+using System.Data.Common;
+using System.IO;
 using System.Threading.Tasks;
+
 
 namespace Discriptive_statistics
 {
@@ -10,19 +16,22 @@ namespace Discriptive_statistics
     {
         static void Main(string[] args)
         {
-            double[] s = new double[] {3,4,3,23,3,2,23,2,32,323,232,32,34,34,3,4,45,545,45,45,3,43,21,3,43, 23};
-            //Random rand = new Random();
-            //for (int i = 0; i < 100; i++)
-            //{ s[i] = rand.Next(2,99); Console.Write(s[i]+" "); }
-            //DescriptiveStatistics.quicksort(s, 0, 99);
-            //Console.WriteLine();
-            //foreach (int x in s) Console.Write(x+" ");
+            //System.Threading.Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo("en-US");
+            
 
+            string d = File.ReadAllText(@"C: \Users\Данагуль\source\repos\Discriptive_statistics\средний периметр.txt");
+            double[] s = DiscriptiveStatistics.GetSample(d);
 
-            testLINQ.Output_descriptive_statistics(s);
-
+            DiscriptiveStatistics.Output(s);
+            DiscriptiveStatistics.Output_descriptive_statistics(s);
+            Console.WriteLine("--------------------------------------------------------------------");
+            s = DiscriptiveStatistics.Rationing_MaxMin(s);
+            DiscriptiveStatistics.Output(s);
+            DiscriptiveStatistics.Output_descriptive_statistics(s);
+            
 
             Console.ReadLine();
         }
+
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Discriptive_statistics
 {
-    class DescriptiveStatistics
+    class DiscriptiveStatistics
     {
 
         /// <summary>
@@ -168,6 +168,38 @@ namespace Discriptive_statistics
             s += "\nМаксимум: " + Max(arr);
             s += "\nСчет: " + arr.Length;
             Console.WriteLine(s);
+        }
+
+        public static double[] Rationing_MaxMin(double[] arr)
+        {
+            double MM = Max(arr) - Min(arr);
+            var s = arr.Select(x => x / MM).ToArray();
+            return (double[])s;
+        }
+        public static void Rationing_Dispersive(double[][] arr)
+        {
+
+        }
+        public static void Output(double[] arr)
+        {
+            for(int i=0;i<30;i++)
+            {
+                Console.Write(string.Format("{0:F2} ",arr[i]));
+            }
+            Console.WriteLine();
+        }
+        public static double[] GetSample(string source)
+        {
+            string[] s = source.Trim().Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Replace('.', ',')).ToArray();
+            double[] arr = new double[s.Length];
+
+            for(int i=0;i<s.Length;i++)
+            {
+             
+                arr[i] = double.Parse(s[i]);
+            }
+
+            return arr;
         }
     }
 }
