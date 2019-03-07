@@ -176,6 +176,10 @@ namespace Discriptive_statistics
             var s = arr.Select(x => x / MM).ToArray();
             return (double[])s;
         }
+        /// <summary>
+        /// Нормирование с помощью дисперсии
+        /// </summary>
+        /// <param name="arr"></param>
         public static void Rationing_Dispersive(double[][] arr)
         {
 
